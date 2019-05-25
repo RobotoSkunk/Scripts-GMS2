@@ -10,6 +10,7 @@
 	Script creado por @RobotoSkunkGame (cuenta principal y personal: @RobotoSkunk) en Twitter
 	                   Basado en PixelatedPope (Usuario de YouTube)
 	Compatibilidad: Game Maker Studio 2
+	Version: 1.0
 		-------------------------------------------------------------------------------------------------------------
 													--Instrucciones de uso--
 		1) Cree un objeto nuevo persistente y escriba el nombre del script en el evento Step
@@ -57,6 +58,7 @@
 	Script created by @RobotoSkunkGame (main and personal account: @RobotoSkunk) on Twitter
 	                   Based on PixelatedPope (YouTube User)
 	Compatibility: Game Maker Studio 2
+	Version: 1.0
 		-------------------------------------------------------------------------------------------------------------
 	    											  --Instructive--
 		1) Create a persistent new object and enter the name of the script in the Step event
