@@ -1,0 +1,216 @@
+/// @func game_adapt_screen(use_height, game_width/height, view, resolution);
+/// @desc Establish an aspect ratio for the game.
+/// @param {bool} use_height Occupy width (false) or high (true) to adjust the game.
+/// @param {real} game_width/height Set the original width or height of your game (depends on the previously established).
+/// @param {real} view[0...7] Camera to which you want to change the width and height (-1 in case you want to set it manually).
+/// @param {real} resolution Multiplier of the width and height to which the game will run.
+#region Instructivo Español
+/*---------------------------------------------------------------------------------------------------------------------------
+	          *---Español---*
+	Script creado por @RobotoSkunkGame (cuenta principal y personal: @RobotoSkunk) en Twitter
+	                   Basado en PixelatedPope (Usuario de YouTube)
+	Compatibilidad: Game Maker Studio 2
+		-------------------------------------------------------------------------------------------------------------
+													--Instrucciones de uso--
+		1) Cree un objeto nuevo persistente y escriba el nombre del script en el evento Step
+		2) El código debe ocuparlo como cualquier otra función de Game Maker, sus argumentos son los siguientes:
+			game_adapt_screen(use_height, game_width/height, view, resolution);
+			Donde:
+				use_height (Booleano): Ocupar ancho (false) o alto (true) para ajustar al juego.
+				game_width/height (Real): Establecer el ancho o alto originales de tu juego (depende de lo establecido anteriormente).
+				view (Real): Cámara a la que desea cambiar el ancho y alto (-1 en caso de que quiera establecerlo manualmente).
+				resolution (Real): Multiplicador del ancho y alto al que correrá el juego (osea que si tu juego corre a 1920x1080
+					 y estableces la resolución en 0.5 el juego correrá a 960x540 píxeles, en caso de que la resolución establecida
+					 sea 1 correrá a 1920x1080).
+			
+		Ejemplo:
+		---------------------------------------------------------
+		=	rel = 0;                                            =
+		=	                                                    =
+		=	if(!rel){                                           =
+		=	    game_adapt_screen(true, 1080, 1, 1);            =
+		=	} else {                                            =
+		=	    game_adapt_screen(true, 1080, 1, 0.5);          =
+		=	}                                                   =
+		---------------------------------------------------------
+		
+		En el ejemplo anterior se creó una variable "rel" en donde si rel es igual a false el juego se adapta a una
+		pantalla cuando el alto del juego es de 1080px (en caso de que el primer argumento fuera false se ocuparía el
+		ancho) y la resolución es la original del juego, en el caso contrario la resolución del juego será la mitad de la
+		resolución original.
+		
+			-------------------------------------------------------------------------------------------------------------
+													--Variables que ofrece--
+	Este script no solo te ofrece la capacidad para poder controlar la relación de aspecto de tu juego, sino que también te
+	ofrece unas variables globales que puedes ocupar para poder mejorar tus códigos y tu juego. Las variables que ofrece son
+	las siguientes (todas son Real):
+	
+		ideal_width (Sólo lectura): El ancho que el código considera el perfecto para tu juego, es el ancho calculado para tu juego y pantalla.
+		ideal_height (Sólo lectura): La altura que el código considera el perfecto para tu juego, es el ancho calculado para tu juego y pantalla.
+		aspect_ratio (Sólo lectura): La relación de aspecto a la que está corriendo tu juego.
+		resolution (Lectura y escritura): La resolución que estableciste o quieres establecer.
+---------------------------------------------------------------------------------------------------------------------------*/
+#endregion
+#region Instructive English
+/*---------------------------------------------------------------------------------------------------------------------------
+	          *---English---*
+	Script created by @RobotoSkunkGame (main and personal account: @RobotoSkunk) on Twitter
+	                   Based on PixelatedPope (YouTube User)
+	Compatibility: Game Maker Studio 2
+		-------------------------------------------------------------------------------------------------------------
+	    											  --Instructive--
+		1) Create a persistent new object and enter the name of the script in the Step event
+		2) The code must occupy it like any other Game Maker function, its arguments are as follows:
+			game_adapt_screen(use_height, game_width/height, view, resolution);
+			Where:
+				use_height (Bool): Occupy width (false) or high (true) to adjust the game.
+				game_width/height (Real): Set the original width or height of your game (depends on the previously established).
+				view (Real): Camera to which you want to change the width and height (-1 in case you want to set it manually).
+				resolution (Real): Multiplier of the width and height to which the game will run (so if your game runs at 1920x1080
+					and set the resolution to 0.5 the game will run at 960x540 pixels, in case the resolution set
+					be 1 will run to 1920x1080).
+			
+		Example:
+		---------------------------------------------------------
+		=	rel = 0;                                            =
+		=	                                                    =
+		=	if(!rel){                                           =
+		=	    game_adapt_screen(true, 1080, 1, 1);            =
+		=	} else {                                            =
+		=	    game_adapt_screen(true, 1080, 1, 0.5);          =
+		=	}                                                   =
+		---------------------------------------------------------
+		
+		In the previous example, a "rel" variable was created, where if rel is equal to false, the game adapts to a
+		screen when the game height is 1080px (in case the first argument is false, the width) and the resolution
+		is the original of the game, in the opposite case the resolution of the game will be half of the
+		original resolution.
+			-------------------------------------------------------------------------------------------------------------
+													--Variables offered-
+	This script not only gives you the ability to control the aspect ratio of your game, but also
+	It offers some global variables that you can use to improve your codes and your game. The variables offered are
+	the following (all are Real):
+
+		ideal_width (Read only): The width that the code considers the perfect for your game, is the calculated width for your game and screen.
+		ideal_height (Read only): The height that the code considers the perfect for your game, is the calculated width for your game and screen.
+		aspect_ratio (Read only): The aspect ratio that your game is running.
+		resolution (Reading and writing): The resolution that you established or want to establish.
+---------------------------------------------------------------------------------------------------------------------------*/
+#endregion
+
+globalvar ideal_width;
+globalvar ideal_height;
+globalvar aspect_ratio;
+globalvar resolution;
+
+var use_height = argument[0];
+if(use_height){
+	ideal_width = 0;
+	ideal_height = argument[1];
+	#region Debug
+	if(ideal_height <= 0){
+		show_error("Error: The height can not be less than or equal to 0. Aborting game.", true);
+		return -1;
+		exit;
+	}
+	#endregion
+} else {
+	ideal_width = argument[1];
+	ideal_height = 0;
+	#region Debug
+	if(ideal_width <= 0){
+		show_error("Error: The width can not be less than or equal to 0. Aborting game.", true);
+		return -1;
+		exit;
+	}
+	#endregion
+}
+var _view = argument[2];
+resolution = argument[3];
+
+#region Debug
+if(_view < -1 or _view > 7){
+	show_error("Error: View out of range[-1, 7]. Aborting game.", true);
+	return -1;
+	exit;
+} else if(_view != round(_view)){
+	show_error("Error: The view doesn't exists (round value). Aborting game.", true);
+	return -1;
+	exit;
+} else if(resolution <= 0){
+	show_error("Error: The resolution can not be less than or equal to 0. Aborting game.", true);
+	return -1;
+	exit;
+}
+#endregion
+
+/*Don't use the window mode if your dimensions exceed the 500x500
+limit of Game Maker, this can bring bugs if you try to resize your window*/
+
+/*No uses el modo ventana si las dimensiones de tu juego exceden el límite 500x500
+de Game Maker, esto puede traer bugs si intentas cambiar el tamaño de la ventana*/
+
+if(!window_get_fullscreen()){
+	#region Modo ventana
+	aspect_ratio = window_get_width() / window_get_height();
+	if(use_height){
+		ideal_width = round(ideal_height * aspect_ratio);
+	} else {
+		ideal_height = round(ideal_width * aspect_ratio);
+	}
+
+	#region Escalar pixeles perfectamente
+	if(window_get_width() mod ideal_width != 0){
+		var d = round(window_get_width()/ideal_width);
+		ideal_width = window_get_width()/d;
+	}
+	if(window_get_height() mod ideal_height != 0){
+		var d = round(window_get_height()/ideal_height);
+		ideal_height = window_get_height()/d;
+	}
+	#endregion
+	#region Checar para añadir números
+	if ideal_width & 1 ideal_width++;
+	if ideal_height & 1 ideal_height++;
+	#endregion
+	
+	if(_view != -1){
+		camera_set_view_size(view_camera[_view], ideal_width, ideal_height);
+	}
+	
+	surface_resize(application_surface, round(ideal_width*resolution), round(ideal_height*resolution));
+	display_set_gui_size(round(ideal_width), round(ideal_height));
+	#endregion
+} else if(window_get_fullscreen()){
+	#region Modo pantalla completa
+	aspect_ratio = display_get_width() / display_get_height();
+	if(use_height){
+		ideal_width = round(ideal_height * aspect_ratio);
+	} else {
+		ideal_height = round(ideal_width * aspect_ratio);
+	}
+
+	#region Escalar pixeles perfectamente
+	if(display_get_width() mod ideal_width != 0){
+		var d = round(display_get_width()/ideal_width);
+		ideal_width = display_get_width()/d;
+	}
+	if(display_get_height() mod ideal_height != 0){
+		var d = round(display_get_height()/ideal_height);
+		ideal_height = display_get_height()/d;
+	}
+	#endregion
+	#region Checar para añadir números
+	if ideal_width & 1 ideal_width++;
+	if ideal_height & 1 ideal_height++;
+	#endregion
+	
+	if(_view != -1){
+		camera_set_view_size(view_camera[_view], ideal_width, ideal_height);
+	}
+	surface_resize(application_surface, round(ideal_width*resolution), round(ideal_height*resolution));
+	display_set_gui_size(round(ideal_width), round(ideal_height));
+	#endregion
+}
+
+return -1;
