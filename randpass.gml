@@ -1,4 +1,4 @@
-///@func randpass(length);
+///@func randpass(length)
 ///@desc random password generator
 ///@param {real} length
 var pass_txt, new_pass;
